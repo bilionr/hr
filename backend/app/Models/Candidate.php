@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Candidate extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'full_name', 'email', 'phone', 'address',
+        'birth_date', 'status'
+    ];
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+}
