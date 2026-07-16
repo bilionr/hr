@@ -50,11 +50,5 @@ class WorkSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
-        DB::table('roles')->insert([
-            ['name' => 'HR Admin'],
-            ['name' => 'HR Staff'],
-            ['name' => 'Interviewer'],
-            ['name' => 'Candidate'],
-        ]);
     }
 }

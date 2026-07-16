@@ -54,12 +54,19 @@ export function WorkCard({ work }: { work: WorkItem }) {
       <div className="px-6 pb-6 flex items-center gap-2">
         {/* Main View Details Button (takes up remaining space) */}
         <Link
-          href={`/work/${work.id}`}
+          href={`/works/${work.id}`}
           className="flex-1 inline-flex items-center justify-center rounded-lg bg-navy hover:bg-[#164A82] text-white px-4 py-3 transition-colors font-semibold text-sm"
         >
           View Details
           <i className="fa-solid fa-arrow-right ml-2"></i>
         </Link>
+        <Link
+  href={`/applications/create?work_id=${work.id}`}
+  className="flex-1 inline-flex items-center justify-center rounded-lg bg-navy hover:bg-[#164A82] text-white px-4 py-3 transition-colors font-semibold text-sm"
+>
+  Apply Now
+  <i className="fa-solid fa-arrow-right ml-2"></i>
+</Link>
 
         {/* Edit Icon Button */}
         <Link
@@ -70,7 +77,6 @@ export function WorkCard({ work }: { work: WorkItem }) {
           <i className="fa-solid fa-pen-to-square"></i>
         </Link>
 
-        {/* Delete Icon Button */}
         {/* Delete Icon Button */}
         <button
           type="button"
