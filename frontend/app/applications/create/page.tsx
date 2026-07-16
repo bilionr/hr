@@ -24,6 +24,12 @@ export default function ApplicationCreatePage() {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            setLoading(false);
+            return;
+        }
 
         if (!workId) {
             setLoading(false);
@@ -47,11 +53,20 @@ export default function ApplicationCreatePage() {
         setMessage("");
 
         try {
-            await axios.post(`${API_URL}/applications`, {
-                work_id: workId,
-                // apply_date and status are left out — the DB defaults
-                // (useCurrent() and 'pending') will fill these in automatically
-            });
+            const token = localStorage.getItem("token");
+
+            await axios.post(
+                `${API_URL}/applications`,
+                {
+                    work_id: workId,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: "application/json",
+                    },
+                }
+            );
 
             setMessage("✨ Application submitted!");
             setTimeout(() => {
@@ -75,6 +90,19 @@ export default function ApplicationCreatePage() {
             </div>
         );
     }
+
+    const token =
+        typeof window !== "undefined"
+            ? localStorage.getItem("token")
+            : null;
+
+        if (!token) {
+            return (
+                <div style={{ padding: "20px" }}>
+                    <p>You must be logged in to apply.</p>
+                </div>
+            );
+        }
 
     return (
         <div style={{ padding: "20px", fontFamily: "sans-serif", maxWidth: "500px" }}>

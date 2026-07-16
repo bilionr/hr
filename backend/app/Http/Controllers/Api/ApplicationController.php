@@ -24,9 +24,14 @@ class ApplicationController extends Controller
     {
         // 1. Validate the incoming data
         $validated = $request->validate([
+            'work_id' => 'required|exists:works,id',
         ]);
 
-        $validated['candidate_id'] = 1;
+        $user = auth()->user();
+
+$candidate = Candidate::where('user_id', $user->id)->firstOrFail();
+
+$validated['candidate_id'] = $candidate->id;
 
         // 2. Create the new item in the database
         $application = Application::create($validated);
@@ -41,7 +46,7 @@ class ApplicationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Application $Aaplication)
+    public function show(Application $application)
     {
         return response()->json($application);
     }

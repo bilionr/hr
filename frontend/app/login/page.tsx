@@ -19,7 +19,7 @@ export default function LoginPage() {
 
         try {
             const response = await api.post("/login", { email, password });
-            localStorage.setItem("auth_token", response.data.token);
+            localStorage.setItem("token", response.data.token);
             localStorage.setItem("user", JSON.stringify(response.data.user));
             router.push("/works");
         } catch (err: any) {
