@@ -17,10 +17,8 @@ export default function RootLayout({
 
         {/* Main Workspace Workspace */}
         <div className="flex flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
-          {/* Sidebar Navigation */}
-          <aside className="w-64 hidden md:block shrink-0">
-            {/* <Sidebar /> */}
-          </aside>
+          
+          {/* Sidebar turned off */}
 
           {/* Dynamic Page Views */}
           <main className="flex-1 bg-white rounded-lg border border-navy/10 p-6 shadow-sm">

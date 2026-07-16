@@ -1,30 +1,32 @@
 // app/ui/workcard.tsx
+'use client';
+import { API_URL } from "@/lib/api";
 import Link from "next/link";
 
-// If using TypeScript, keep the interface. If using JS, delete these lines:
 interface WorkItem {
   id: number;
   title: string;
   department: string;
   description: string;
+  image_url?: string;
+  type?: string;
+  company?: string;
+  location?: string;
+  salary?: string;
+  closing_date?: string;
 }
 
 export function WorkCard({ work }: { work: WorkItem }) {
-return (
+  return (
     <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition border border-[#E8D1B7] flex flex-col justify-between">
       <div>
         <div className="relative">
           {/* Dynamically fallback to a default image if none exists */}
           <img
-            src={work.image_url || "https://static.nike.com/a/images/t_web_pw_592_v2/f_auto/u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/b131dc71-7fae-48c5-a552-bbb67174c5c4/NIKE+ZOOM+SKYLON+11.png"}
+            src={work.image_url || "https://thumbs.dreamstime.com/b/handsome-stylish-modern-african-american-business-man-entrepreneur-executive-sitting-outside-office-cheerful-smile-155856257.jpg"}
             alt={work.title}
             className="w-full h-52 object-cover"
           />
-          <div className="absolute top-3 right-3">
-            <button className="bg-white rounded-full p-2 shadow hover:bg-gray-100">
-              <i className="fa-solid fa-ellipsis-vertical text-navy"></i>
-            </button>
-          </div>
         </div>
 
         <div className="p-6">
@@ -37,7 +39,7 @@ return (
           </h2>
 
           <p className="mt-2 text-gray-600 font-medium">
-            {work.company || "CareerAdmin Inc"}
+            {work.department}
           </p>
 
           <div className="mt-5 space-y-2 text-sm text-gray-500">
@@ -48,14 +50,56 @@ return (
         </div>
       </div>
 
-      <div className="px-6 pb-6">
+      {/* BOTTOM ACTION BAR */}
+      <div className="px-6 pb-6 flex items-center gap-2">
+        {/* Main View Details Button (takes up remaining space) */}
         <Link
           href={`/work/${work.id}`}
-          className="w-full inline-flex items-center justify-center rounded-lg bg-navy hover:bg-[#164A82] text-white px-5 py-3 transition-colors font-semibold"
+          className="flex-1 inline-flex items-center justify-center rounded-lg bg-navy hover:bg-[#164A82] text-white px-4 py-3 transition-colors font-semibold text-sm"
         >
           View Details
           <i className="fa-solid fa-arrow-right ml-2"></i>
         </Link>
+
+        {/* Edit Icon Button */}
+        <Link
+          href={`/works/${work.id}/edit`}
+          className="p-3 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-[#162D5D] transition-colors flex items-center justify-center"
+          title="Edit Work"
+        >
+          <i className="fa-solid fa-pen-to-square"></i>
+        </Link>
+
+        {/* Delete Icon Button */}
+        {/* Delete Icon Button */}
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const formData = new FormData();
+              formData.append("_method", "DELETE");
+
+              const response = await fetch(`${API_URL}/works/${work.id}`, {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                },
+                body: formData,
+              });
+
+              if (response.ok) {
+                window.location.reload();
+              } else {
+                alert("Failed to delete.");
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          }}
+          className="p-3 border border-red-100 rounded-lg text-red-500 hover:bg-red-50 transition-colors flex items-center justify-center"
+        >
+          {/* Your SVG or icon goes here */}
+        </button>
       </div>
     </div>
   );

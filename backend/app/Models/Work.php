@@ -17,4 +17,5 @@ class Work extends Model
     {
         return $this->hasMany(Application::class);
     }
+
 }

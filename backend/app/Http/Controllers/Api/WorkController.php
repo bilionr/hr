@@ -3,54 +3,78 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Work;
 use Illuminate\Http\Request;
+use App\Models\Work;
 use Illuminate\Support\Str;
 
 class WorkController extends Controller
 {
-    // Career Portal: public list of published jobs
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
-        $query = Work::query();
-        return response()->json($query->latest()->paginate(10));
+        return response()->json(Work::all());
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $data = $request->validate([
+        // 1. Validate the incoming data
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'description' => 'required|string',
-            'is_active' => 'required|boolean',
+            'department' => 'nullable|string',
+            'description' => 'nullable|string',
         ]);
 
-        $work = Work::create($data);
-        return response()->json($work, 201);
+        // 2. Create the new work item in the database
+        $work = Work::create($validated);
+
+        // 3. Return the newly created item with a 201 Created status code
+        return response()->json([
+            'message' => 'Work opportunity created successfully!',
+            'data' => $work
+        ], 201);
     }
 
-    public function update(Request $request, Work $Work)
+    /**
+     * Display the specified resource.
+     */
+    public function show(Work $work)
     {
-        $data = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'employment_type' => 'sometimes|in:full_time,part_time,contract,internship',
-            'description' => 'sometimes|string',
-            'requirements' => 'nullable|string',
-            'status' => 'sometimes|in:draft,published,closed',
-            'application_deadline' => 'nullable|date',
+        return response()->json($work);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        $work = Work::findOrFail($id);
+    
+        // Validate the incoming data
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $work->update($data);
+        // Update and save
+        $work->update($validated);
 
-        return response()->json($Work);
+        return response()->json([
+            'message' => 'Work updated successfully!',
+            'data' => $work
+        ]);
     }
 
-    public function destroy(Work $work)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
     {
+        $work = Work::findOrFail($id);
         $work->delete();
-
-        return response()->json(null, 204);
     }
 }
